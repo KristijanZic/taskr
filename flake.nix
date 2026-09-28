@@ -80,7 +80,7 @@
 
         # Build the actual crate itself, reusing the dependency
         # artifacts from above.
-        my-crate = craneLib.buildPackage (
+        taskr-server = craneLib.buildPackage (
           commonArgs
           // {
             inherit cargoArtifacts;
@@ -94,10 +94,10 @@
       {
         checks = {
           # Build the crate as part of `nix flake check` for convenience
-          inherit my-crate;
+          inherit taskr-server;
 
           # Add clippy and fmt checks that automatically use the fenix toolchain
-          my-crate-clippy = craneLib.cargoClippy (
+          taskr-server-clippy = craneLib.cargoClippy (
             commonArgs
             // {
               inherit cargoArtifacts;
@@ -105,14 +105,14 @@
             }
           );
 
-          my-crate-fmt = craneLib.cargoFmt {
+          taskr-server-fmt = craneLib.cargoFmt {
             inherit src;
           };
         };
 
         packages = {
-          default = my-crate;
-          inherit my-crate;
+          default = taskr-server;
+          inherit taskr-server;
         };
 
         devShells.default = craneLib.devShell {
