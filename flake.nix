@@ -120,7 +120,8 @@
           # checks = self.checks.${system};
 
           # This si so that rust_analyzer in zed works:
-          RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
+          # RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
+          RUST_SRC_PATH = "${fenixPkgs.stable.rust-src}/lib/rustlib/src/rust/library";
 
           # Extra inputs can be added here; cargo and rustc are provided by default.
           packages = [
