@@ -24,6 +24,13 @@ fn main() {
         Some(t) => println!("We have a title: {}", t),
         None => println!("No title was given!"),
     }
+
+    let parse: Result<u32, _> = "42".parse::<u32>();
+
+    match parse {
+        Ok(n) => println!("Parsed the number: {}", n),
+        Err(e) => println!("That wasn't a number! {}", e),
+    }
 }
 
 fn print_title(task: &Task) {
