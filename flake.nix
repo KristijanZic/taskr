@@ -67,7 +67,8 @@
           ];
 
           buildInputs = [
-            # Add additional build inputs here
+            # Crucial for macOS standard library linking in Nix
+            pkgs.libiconv
           ];
 
           # Additional environment variables can be set directly
@@ -119,6 +120,8 @@
           # Inherit inputs from checks.
           # checks = self.checks.${system};
 
+          inputsFrom = [ taskr-server ];
+
           # This si so that rust_analyzer in zed works:
           # RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
           RUST_SRC_PATH = "${fenixPkgs.stable.rust-src}/lib/rustlib/src/rust/library";
@@ -127,19 +130,19 @@
           packages = [
           ];
 
-          shellHook = lib.optionalString pkgs.stdenv.isDarwin ''
-            # xcode-select -p actually honors DEVELOPER_DIR if it's already set
-            # — it doesn't only report the system-selected Xcode, it echoes back the override if one is active.
-            # Since the nix apple-sdk setup hook exports DEVELOPER_DIR to the nix-store path before your shellHook runs,
-            # calling xcode-select -p inside the shellHook just reads its own already-poisoned env var and returns it right back to you
-            # — a circular reference. That's why it looks like the fix "didn't take" even though it should run.
-            # export DEVELOPER_DIR=$(/usr/bin/xcode-select -p)
-
-            # env -u DEVELOPER_DIR strips the variable just for that one invocation,
-            # so xcode-select is forced to consult the real system Xcode selection
-            # instead of parroting the nix value.
-            export DEVELOPER_DIR=$(env -u DEVELOPER_DIR /usr/bin/xcode-select -p)
-          '';
+          # shellHook = lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
+          #   # xcode-select -p actually honors DEVELOPER_DIR if it's already set
+          #   # — it doesn't only report the system-selected Xcode, it echoes back the override if one is active.
+          #   # Since the nix apple-sdk setup hook exports DEVELOPER_DIR to the nix-store path before your shellHook runs,
+          #   # calling xcode-select -p inside the shellHook just reads its own already-poisoned env var and returns it right back to you
+          #   # — a circular reference. That's why it looks like the fix "didn't take" even though it should run.
+          #   # export DEVELOPER_DIR=$(/usr/bin/xcode-select -p)
+          #
+          #   # env -u DEVELOPER_DIR strips the variable just for that one invocation,
+          #   # so xcode-select is forced to consult the real system Xcode selection
+          #   # instead of parroting the nix value.
+          #   export DEVELOPER_DIR=$(env -u DEVELOPER_DIR /usr/bin/xcode-select -p)
+          # '';
         };
       }
     );
