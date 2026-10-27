@@ -14,4 +14,11 @@ fn main() {
     first.done = true;
 
     println!("{} is done: {}", first.title, first.done);
+
+    print_title(&first);
+    print_title(&first);
+}
+
+fn print_title(task: &Task) {
+    println!("Title: {}", task.title)
 }
