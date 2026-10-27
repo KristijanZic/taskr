@@ -1,10 +1,16 @@
-async fn slow_hello() -> String {
-    "hello form an async function".to_string()
-}
+use axum::{Router, routing::get};
 
 #[tokio::main]
 async fn main() {
-    let greeting = slow_hello().await;
+    let app = Router::new().route("/", get(root));
 
-    println!("{}", greeting);
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+
+    println!("taskr running on http://localhost:3000");
+
+    axum::serve(listener, app).await.unwrap();
+}
+
+async fn root() -> &'static str {
+    "taskr is alive"
 }
