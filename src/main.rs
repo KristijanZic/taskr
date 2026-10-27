@@ -17,6 +17,13 @@ fn main() {
 
     print_title(&first);
     print_title(&first);
+
+    let maybe_title: Option<String> = Some("Buy milk".to_string());
+
+    match maybe_title {
+        Some(t) => println!("We have a title: {}", t),
+        None => println!("No title was given!"),
+    }
 }
 
 fn print_title(task: &Task) {
