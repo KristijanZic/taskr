@@ -29,8 +29,12 @@ async fn health() -> &'static str {
     "ok"
 }
 
-async fn list_tasks() -> &'static str {
-    "a list of tasks will go here"
+async fn list_tasks(Query(params): Query<HashMap<String, String>>) -> String {
+    let filter = params
+        .get("done")
+        .map_or("everything".to_string(), |v| format!("done={}", v));
+
+    format!("listing tasks, filter: {}", filter)
 }
 
 async fn create_task() -> &'static str {
